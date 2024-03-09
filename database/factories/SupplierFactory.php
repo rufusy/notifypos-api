@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Person;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Supplier>
+ * @extends Factory
  */
 class SupplierFactory extends Factory
 {
@@ -16,8 +17,13 @@ class SupplierFactory extends Factory
      */
     public function definition(): array
     {
+        $type = $this->faker->randomElement(['I', 'B']);
+        $companyName = $type === 'I' ? '' : $this->faker->company;
+
         return [
-            //
+            'person_id' => Person::factory()->create()->id,
+            'company_name' => $companyName,
+            'type' => $type
         ];
     }
 }

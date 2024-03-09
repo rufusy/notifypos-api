@@ -16,8 +16,25 @@ class PersonFactory extends Factory
      */
     public function definition(): array
     {
+        $gender = $this->faker->randomElement(['M', 'F']);
+
+        if($gender === 'M') {
+            $firstName = $this->faker->firstNameMale;
+            $lastName = $this->faker->firstNameMale;
+        } else {
+            $firstName = $this->faker->firstNameFemale;
+            $lastName = $this->faker->firstNameFemale;
+        }
+
         return [
-            //
+            'last_name' => $lastName,
+            'first_name' => $firstName,
+            'gender'  => $gender,
+            'phone_number' => $this->faker->unique()->phoneNumber,
+            'email' => $this->faker->unique()->safeEmail,
+            'country' => $this->faker->country,
+            'address' => $this->faker->address,
+            'city' => $this->faker->city
         ];
     }
 }

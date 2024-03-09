@@ -19,7 +19,7 @@ return new class extends Migration
                 ->on('people')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->string('company_name');
+            $table->string('company_name')->nullable();
             $table->string('type', 1)->comment('Individual or Business, [I, B, i, b]');
             $table->timestamps();
         });

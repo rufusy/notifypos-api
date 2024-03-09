@@ -1,13 +1,19 @@
 <?php
+/**
+ * @author Rufusy Idachi <idachirufus@gmail.com>
+ * @date: 2/28/2024
+ * @time: 4:12 PM
+ */
 
 namespace Database\Seeders;
 
-use App\Models\Customer;
+use App\Models\Person;
+use App\Models\User;
 use Database\Seeders\traits\DisableForeignKeys;
 use Database\Seeders\traits\TruncateTable;
 use Illuminate\Database\Seeder;
 
-class CustomerSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     use TruncateTable, DisableForeignKeys;
 
@@ -18,9 +24,9 @@ class CustomerSeeder extends Seeder
     {
         $this->disableForeignKeys();
 
-        $this->truncate(Customer::class);
+        $this->truncate(User::class);
 
-        Customer::factory(100)->create();
+        User::factory(20)->create();
 
         $this->enableForeignKeys();
     }
