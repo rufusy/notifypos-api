@@ -13,7 +13,10 @@ class RedirectIfAuthenticated
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param Request $request
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param string ...$guards
+     * @return Response
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
@@ -21,6 +24,9 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                if ($request->expectsJson()) {
+                    return response()->json(['error' => 'Already authenticated.'], 200);
+                }
                 return redirect(RouteServiceProvider::HOME);
             }
         }
