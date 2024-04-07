@@ -18,6 +18,7 @@ use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Contracts\PasswordUpdateResponse;
 use Laravel\Fortify\Contracts\RegisterResponse;
+use Laravel\Fortify\Contracts\VerifyEmailResponse;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -27,20 +28,6 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
-            public function toResponse($request): JsonResponse|RedirectResponse
-            {
-                if ($request->expectsJson()) {
-                    $user = User::where('email', $request->email)->first();
-                    return response()->json([
-                        'message' => 'Logged in successfully',
-                        'token' => $user->createToken($request->email)->plainTextToken
-                    ], 200);
-                }
-                return redirect()->intended(Fortify::redirects('login'));
-            }
-        });
-
         $this->app->instance(RegisterResponse::class, new class implements RegisterResponse {
             public function toResponse($request): JsonResponse|RedirectResponse
             {
@@ -55,15 +42,26 @@ class FortifyServiceProvider extends ServiceProvider
             }
         });
 
-        $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
+        $this->app->instance(VerifyEmailResponse::class, new class implements VerifyEmailResponse {
+            public function toResponse($request): JsonResponse|RedirectResponse
+            {
+                return $request->wantsJson()
+                    ? response()->json(['message' => 'Email verified successfully.'], 200)
+                    : redirect(Fortify::redirects( '/'));
+            }
+        });
+
+        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
             public function toResponse($request): JsonResponse|RedirectResponse
             {
                 if ($request->expectsJson()) {
+                    $user = User::where('email', $request->email)->first();
                     return response()->json([
-                        'message' => 'Logged out successfully',
+                        'message' => 'Logged in successfully.',
+                        'token' => $user->createToken($request->email)->plainTextToken
                     ], 200);
                 }
-                return redirect(Fortify::redirects('logout', '/'));
+                return redirect()->intended(Fortify::redirects('login'));
             }
         });
 
@@ -71,11 +69,22 @@ class FortifyServiceProvider extends ServiceProvider
             public function toResponse($request): JsonResponse|RedirectResponse
             {
                 return $request->wantsJson()
-                    ? response()->json(['message' => 'password updated successfully'], 200)
+                    ? response()->json(['message' => 'Password updated successfully.'], 200)
                     : back()->with('status', Fortify::PASSWORD_UPDATED);
             }
         });
 
+        $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
+            public function toResponse($request): JsonResponse|RedirectResponse
+            {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'message' => 'Logged out successfully.',
+                    ], 200);
+                }
+                return redirect(Fortify::redirects('logout', '/'));
+            }
+        });
     }
 
     /**
@@ -89,7 +98,7 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());
 
             return Limit::perMinute(5)->by($throttleKey);
         });

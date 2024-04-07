@@ -2,25 +2,25 @@
 /**
  * @author Rufusy Idachi <idachirufus@gmail.com>
  * @date: 3/15/2024
- * @time: 9:03 PM
+ * @time: 9:07 PM
  */
 
 namespace App\Http\Responses;
 
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Laravel\Fortify\Fortify;
 use Symfony\Component\HttpFoundation\Response;
 
-class HasMailResponse implements BaseResponse
+class SendVerifyEmailResponse implements Responsable
 {
-
-    public function toResponse($request): JsonResponse|RedirectResponse|Response
+    public function toResponse($request): JsonResponse|Response|RedirectResponse
     {
         return $request->wantsJson()
             ? response()->json([
-                'message' => 'Your email is already verified',
+                'message' => 'Email verification sent.',
             ], 200)
-            : redirect()->intended(Fortify::redirects('email-verification'));
+            : back()->with('status', Fortify::VERIFICATION_LINK_SENT);
     }
 }

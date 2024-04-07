@@ -13,7 +13,6 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 class LogoutController extends AuthenticatedSessionController
 {
-
     public function destroy(Request $request): LogoutResponse
     {
         auth('sanctum')->user()->currentAccessToken()->delete();

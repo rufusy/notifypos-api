@@ -7,8 +7,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Responses\HasMailResponse;
-use App\Http\Responses\SendMailResponse;
+use App\Http\Responses\HasVerifiedEmailResponse;
+use App\Http\Responses\SendVerifyEmailResponse;
 use Illuminate\Http\Request;
 use Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController as BaseController;
 
@@ -17,11 +17,11 @@ class EmailVerificationNotificationController extends BaseController
     public function store(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return app(HasMailResponse::class);
+            return app(HasVerifiedEmailResponse::class);
         }
 
         $request->user()->sendEmailVerificationNotification();
 
-        return app(SendMailResponse::class);
+        return app(SendVerifyEmailResponse::class);
     }
 }
