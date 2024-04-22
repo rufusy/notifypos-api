@@ -5,10 +5,10 @@
  * @time: 1:31 PM
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1\Auth;
 
+use App\Http\Responses\Api\V1\Auth\VerifyEmailResponse;
 use Illuminate\Auth\Events\Verified;
-use Laravel\Fortify\Contracts\VerifyEmailResponse;
 use Laravel\Fortify\Http\Requests\VerifyEmailRequest;
 
 class VerifyEmailController extends \Laravel\Fortify\Http\Controllers\VerifyEmailController

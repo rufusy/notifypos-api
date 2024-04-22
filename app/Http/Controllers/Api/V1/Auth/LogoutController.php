@@ -5,7 +5,7 @@
  * @time: 10:54 PM
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1\Auth;
 
 use Illuminate\Http\Request;
 use Laravel\Fortify\Contracts\LogoutResponse;

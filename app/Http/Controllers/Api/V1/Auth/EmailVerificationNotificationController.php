@@ -5,14 +5,13 @@
  * @time: 8:49 PM
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1\Auth;
 
-use App\Http\Responses\HasVerifiedEmailResponse;
-use App\Http\Responses\SendVerifyEmailResponse;
+use App\Http\Responses\Api\V1\Auth\HasVerifiedEmailResponse;
+use App\Http\Responses\Api\V1\Auth\SendVerifyEmailResponse;
 use Illuminate\Http\Request;
-use Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController as BaseController;
 
-class EmailVerificationNotificationController extends BaseController
+class EmailVerificationNotificationController extends \Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController
 {
     public function store(Request $request)
     {

@@ -39,7 +39,6 @@ class AuthServiceProvider extends ServiceProvider
                     'hash' => sha1($notifiable->getEmailForVerification()),
                 ]
             );
-
             return env('SPA_URL') . '/email/verify/' . '?verify_url=' . urlencode($verifyUrl);
         });
     }
